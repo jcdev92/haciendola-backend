@@ -1,0 +1,28 @@
+services:
+  db:
+    container_name: postgres-haciendola
+    image: postgres
+    ports:
+      - ${DB_LOCAL_PORT}:${DB_PORT}
+    volumes:
+      - local_haciendola_db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD} 
+      POSTGRES_DB: ${DB_NAME} 
+
+  pgadmin:
+    depends_on:
+      - db
+    image: dpage/pgadmin4
+    ports: 
+      - "8080:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    environment:
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+
+volumes:
+  local_haciendola_db:
+  pgadmin-data:

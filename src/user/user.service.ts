@@ -10,7 +10,7 @@ import { User } from './entities/user.entity';
 import { isEmail, isUUID } from 'class-validator';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
 @Injectable()
 export class UserService {
@@ -29,7 +29,6 @@ export class UserService {
       .where('user.isActive = true')
       .take(limit)
       .skip(offset)
-      .leftJoinAndSelect('user.country', 'country')
       .getMany();
 
     if (!users.length) {
@@ -58,49 +57,8 @@ export class UserService {
     return user;
   }
 
-  async findOneWithRolesAndPermissions(term: string): Promise<User | User[]> {
-    let user: User | Promise<User | User[]>;
-
-    const queryBuilder = this.userRepository
-      .createQueryBuilder('user')
-      .leftJoinAndSelect('user.country', 'country')
-      .innerJoinAndSelect('user.role', 'role')
-      .leftJoinAndSelect('role.permission', 'permission');
-
-    if (isUUID(term)) {
-      user = await queryBuilder.where('user.id = :id', { id: term }).getOne();
-    } else if (isNaN(+term)) {
-      if (isEmail(term)) {
-        user = await queryBuilder
-          .where('user.email = :email', { email: term })
-          .getOne();
-      } else {
-        user = await queryBuilder
-          .where('user.fullName = :fullName', { fullName: term })
-          .getOne();
-      }
-    }
-
-    if (!user) {
-      throw new NotFoundException(`User with search term: "${term}" not found`);
-    }
-
-    return user;
-  }
-
   async update(id: string, updateUserDto: UpdateUserDto) {
-    const { originCountry, ...updateData } = updateUserDto;
-
-    if (originCountry) {
-      const country = await this.countryRepository.findOneBy({
-        name: originCountry,
-      });
-      const user = await this.userRepository.preload({
-        id,
-        country,
-      });
-      await this.userRepository.save(user);
-    }
+    const { ...updateData } = updateUserDto;
 
     const user = await this.userRepository.preload({
       id,

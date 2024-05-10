@@ -22,19 +22,58 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
+
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+**PRODUCTS RESTFULL API**
+  - CRUD de productos con autenticacion de usuario.
+  - Puedes crear tu usuario, logearte y listar todos los productos, crear , editar, o eliminar un producto.
+
+**INFO:**
+
+  - Desarrollo:
+    - En en el archivo ".env.template" se encuentran las respectivas variables de entorno.
+    - Recuerda llenar las variables de entorno en el .env.template y luego renombrarlo a .env para que corran las variables de entorno.
+    - puedes usar las que ya estan por defecto comentadas.
+
+
+**REQUISITOS:**
+  - En modo desarrollo:
+    - Tener docker instalado para correr la base de datos via docker compose up.
+    - En su defecto tener instalado postgreSQL en tu computadora. Y la base de datos creada para poder conectarte.
+    - Si tienes ambos instalado tanto docker como postgresql, chocaran los puertos 5432 en local, por lo tanto si usas docker para correr la base datos pon en la varibale de entorno DB_LOCAL_PORT el puerto 5433... si no usaras docker el DB_LOCAL_PORT puede ser tranquilamente el 5432.
+    - Si usas docker para correr la base datos, puedes usar las variables de entorno que dejo ya por defecto en el env.template, solo de renombrar el archivo a ".env" y ejecutar "docker compose up -d".
+    - Obviamente tener node js instalado.
+    - De preferencia uso pnpm.
+
+
+
+
+**DOCUMENTACION OPENAPI / RUTAS:**
+
+  **Development:**
+  - http://localhost:9000/api
+
+
+
 
 ## Installation
 
+- renombrar el archivo ".env.template" a ".env".
+
 ```bash
+# install dependencies
 $ pnpm install
 ```
+
+
 
 ## Running the app
 
 ```bash
+# start data base
+$ docker compose up -d
+
 # development
 $ pnpm run start
 
@@ -45,18 +84,9 @@ $ pnpm run start:dev
 $ pnpm run start:prod
 ```
 
-## Test
+## License
 
-```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
-```
+Nest is [MIT licensed](LICENSE).
 
 ## Support
 
@@ -64,9 +94,7 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 
 ## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- Author - [Jesus Clemente](https://jcdev-portfolio-frontend.vercel.app/)
 
 ## License
 
