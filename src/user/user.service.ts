@@ -58,6 +58,12 @@ export class UserService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
+    const userExists = await this.userRepository.findOneBy({ id });
+    if (!userExists) {
+      throw new NotFoundException(
+        `User with id: ${id} not found, can't update`,
+      );
+    }
     const { ...updateData } = updateUserDto;
 
     const user = await this.userRepository.preload({
@@ -79,8 +85,8 @@ export class UserService {
         `User with id: ${id} not found, can't delete`,
       );
     }
-    user.isActive = false;
-    await this.userRepository.save(user);
+
+    await this.userRepository.remove(user);
     this.logger.log(`User with id: ${id} deleted successfully`);
     return {
       message: `User with id: ${id} deleted successfully`,

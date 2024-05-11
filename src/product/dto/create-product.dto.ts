@@ -20,7 +20,6 @@ export class CreateProductDto {
   })
   title: string;
 
-  @IsNotEmpty()
   @IsString()
   @ApiProperty({
     example: 'train your creativity with tempera-100-ml',
@@ -38,35 +37,28 @@ export class CreateProductDto {
   })
   sku: string;
 
-  @IsNotEmpty()
-  @IsNumber()
-  @IsPositive()
+  @IsString()
   @ApiProperty({ example: 103.45, description: 'Product grams' })
-  grams: number;
+  grams: string;
 
-  @IsNotEmpty()
   @IsNumber()
   @IsPositive()
   @ApiProperty({ example: 100, description: 'Product stock' })
   stock: number;
 
-  @IsNotEmpty()
   @IsNumber()
   @IsPositive()
   @ApiProperty({ example: 13.85, description: 'Product price' })
   price: number;
 
-  @IsNotEmpty()
   @IsNumber()
   @IsPositive()
   @ApiProperty({ example: 2.0, description: 'Product compare price' })
   comparePrice: number;
 
-  @IsNotEmpty()
-  @IsNumber()
-  @IsPositive()
-  @ApiProperty({ example: 7891153003689, description: 'Product barcode' })
-  barcode: number; // Optional barcode
+  @IsString()
+  @ApiProperty({ example: '7891153003689', description: 'Product barcode' })
+  barcode: string;
 
   @IsNotEmpty()
   @ApiProperty({ example: true, description: 'Product status' })

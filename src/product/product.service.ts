@@ -4,6 +4,7 @@ import {
   InternalServerErrorException,
   Logger,
   NotFoundException,
+  OnModuleInit,
 } from '@nestjs/common';
 import { CreateProductDto, UpdateProductDto } from './dto';
 import { Product } from './entities/product.entity';
@@ -11,15 +12,55 @@ import { isUUID } from 'class-validator';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationDto } from '../common/dto/pagination.dto';
+import { FileConverterService } from 'src/common/file-converter/file-converter.service';
 
 @Injectable()
-export class ProductService {
+export class ProductService implements OnModuleInit {
   private readonly logger = new Logger('ProductService');
 
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
+    private readonly fileConverterService: FileConverterService,
   ) {}
+
+  async onModuleInit() {
+    await this.saveManyProducts();
+  }
+
+  private convertProductFile(filePath: string) {
+    return this.fileConverterService.xlsxToJson(filePath);
+  }
+
+  private async saveManyProducts() {
+    const filePath = 'src/product/file/products.xlsx';
+    const products = this.fileConverterService.xlsxToJson(filePath);
+
+    try {
+      const productsExists = await Promise.all(
+        products.map(async (product) => {
+          const productExists = await this.productRepository.findOneBy({
+            handle: product.handle,
+          });
+          return productExists;
+        }),
+      );
+
+      if (productsExists.some((product) => product)) {
+        this.logger.warn('Some products already exist');
+        return;
+      } else {
+        await Promise.all(
+          products.map(async (product) => {
+            await this.productRepository.save(product);
+          }),
+        );
+        this.logger.log('Products saved successfully');
+      }
+    } catch (error) {
+      this.handleDBExceptions(error);
+    }
+  }
 
   async create(createProductDto: CreateProductDto) {
     try {
@@ -66,6 +107,12 @@ export class ProductService {
   }
 
   async update(id: string, updateProductDto: UpdateProductDto) {
+    const productExists = await this.productRepository.findOneBy({ id });
+
+    if (!productExists) {
+      throw new NotFoundException(`Product with id: ${id} not found`);
+    }
+
     const { ...updateData } = updateProductDto;
 
     const product = await this.productRepository.preload({
@@ -83,16 +130,22 @@ export class ProductService {
   async remove(id: string) {
     const product = await this.productRepository.findOneBy({ id });
     if (!product) {
-      throw new NotFoundException(
-        `Product with id: ${id} not found, can't delete`,
-      );
+      throw new NotFoundException(`Product with id: ${id} not found`);
     }
-    product.isActive = false;
-    await this.productRepository.save(product);
+    await this.productRepository.remove(product);
     this.logger.log(`Product with id: ${id} deleted successfully`);
     return {
       message: `Product with id: ${id} deleted successfully`,
     };
+  }
+
+  async deleteAllProducts() {
+    const query = this.productRepository.createQueryBuilder('product');
+    try {
+      return await query.delete().where({}).execute();
+    } catch (error) {
+      this.handleDBExceptions(error);
+    }
   }
 
   private handleDBExceptions(error: any) {

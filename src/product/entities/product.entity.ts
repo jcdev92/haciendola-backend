@@ -12,47 +12,34 @@ export class Product {
   handle: string;
 
   @Column('text', {
-    unique: true,
     nullable: false,
   })
   title: string;
 
-  @Column('text', {
-    unique: true,
-    nullable: false,
-  })
+  @Column('text', {})
   description: string;
 
   @Column('text', {
     unique: true,
-    nullable: false,
   })
   sku: string;
 
-  @Column('int', {
-    nullable: false,
-  })
-  grams: number;
+  @Column('text', {})
+  grams: string;
 
-  @Column('int', {
-    nullable: false,
-  })
+  @Column('int', {})
   stock: number;
 
-  @Column('float', {
-    nullable: false,
-  })
+  @Column('float', {})
   price: number;
 
-  @Column('float', {
-    nullable: false,
-  })
+  @Column('float', {})
   comparePrice: number;
 
-  @Column('bigint', {
-    nullable: false,
+  @Column('text', {
+    nullable: true,
   })
-  barcode: number;
+  barcode: string;
 
   @Column('bool', {
     name: 'is_active',

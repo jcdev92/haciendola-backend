@@ -8,6 +8,7 @@ import {
   Delete,
   Query,
   ParseUUIDPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto, UpdateProductDto } from './dto';
@@ -19,10 +20,12 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('Product')
 @ApiBearerAuth()
 @Controller('product')
+@UseGuards(AuthGuard('jwt'))
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
@@ -107,5 +110,15 @@ export class ProductController {
   @ApiResponse({ status: 404, description: 'Product not found' })
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.productService.remove(id);
+  }
+
+  @Delete()
+  @ApiOperation({
+    summary: 'Delete all products.',
+    description: 'Delete all products.',
+  })
+  @ApiResponse({ status: 200, description: 'All products deleted' })
+  removeAll() {
+    return this.productService.deleteAllProducts();
   }
 }
