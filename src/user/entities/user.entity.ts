@@ -25,11 +25,15 @@ export class User {
 
   @Column('text', {
     name: 'name',
+    unique: true,
+    nullable: false,
   })
   name: string;
 
   @Column('text', {
-    name: 'name',
+    name: 'last_name',
+    unique: true,
+    nullable: false,
   })
   lastName: string;
 
