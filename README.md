@@ -33,8 +33,7 @@
 
   - Desarrollo:
     - En en el archivo ".env.template" se encuentran las respectivas variables de entorno.
-    - Recuerda llenar las variables de entorno en el .env.template y luego renombrarlo a .env para que corran las variables de entorno.
-    - puedes usar las que ya estan por defecto comentadas.
+    - Puedes usar las que ya estan por defecto, o cambiar sus valores por los que tu quieras.
 
 
 **REQUISITOS:**
