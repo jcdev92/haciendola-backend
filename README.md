@@ -33,7 +33,9 @@
 
   - Desarrollo:
     - En en el archivo ".env.template" se encuentran las respectivas variables de entorno.
-    - Puedes usar las que ya estan por defecto, o cambiar sus valores por los que tu quieras.
+    - recuerda renombrar el ".env.template" por ".env"
+    - recuerda tambien DESCOMENTAR LAS VARIABLES DE ENTORNO
+    - Puedes usar las valores de las variables de entorno que ya estan por defecto, o cambiarlos por los que tu prefieras.
 
 
 **REQUISITOS:**
@@ -58,8 +60,6 @@
 
 ## Installation
 
-- renombrar el archivo ".env.template" a ".env".
-
 ```bash
 # install dependencies
 $ pnpm install
@@ -68,6 +68,9 @@ $ pnpm install
 
 
 ## Running the app
+
+- renombrar el archivo ".env.template" a ".env".
+- DESCOMENTAR las variables de entorno.
 
 ```bash
 # start data base

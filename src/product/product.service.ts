@@ -13,6 +13,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { FileConverterService } from 'src/common/file-converter/file-converter.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ProductService implements OnModuleInit {
@@ -22,6 +23,7 @@ export class ProductService implements OnModuleInit {
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
     private readonly fileConverterService: FileConverterService,
+    private readonly configService: ConfigService,
   ) {}
 
   async onModuleInit() {
@@ -73,7 +75,10 @@ export class ProductService implements OnModuleInit {
   }
 
   async findAll(paginationDto: PaginationDto): Promise<Product[]> {
-    const { limit = 10, offset = 0 } = paginationDto;
+    let { limit, offset } = paginationDto;
+
+    limit = this.configService.get('LIMIT');
+    offset = this.configService.get('OFFSET');
 
     const products = await this.productRepository
       .createQueryBuilder('product')

@@ -29,4 +29,19 @@ export class AuthController {
   loginUser(@Body() loginUserDto: LoginUserDto) {
     return this.authService.login(loginUserDto);
   }
+
+  @Post('authStatus')
+  @ApiOperation({ summary: 'Check token' })
+  @ApiResponse({ status: 200, description: 'Token is valid' })
+  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized, token not valid, login again',
+  })
+  @ApiResponse({ status: 500, description: 'Internal server error' })
+  checkAuthStatus(
+    @Body() jwtToken: { token: string },
+  ): Promise<{ token: string }> {
+    return this.authService.checkAuthStatus(jwtToken);
+  }
 }

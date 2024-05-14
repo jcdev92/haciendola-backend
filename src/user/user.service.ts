@@ -4,25 +4,61 @@ import {
   InternalServerErrorException,
   Logger,
   NotFoundException,
+  OnModuleInit,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { InjectRepository } from '@nestjs/typeorm';
+import { isEmail, isUUID } from 'class-validator';
+import { PaginationDto } from '../common/dto/pagination.dto';
+import { Repository } from 'typeorm';
 import { UpdateUserDto } from './dto';
 import { User } from './entities/user.entity';
-import { isEmail, isUUID } from 'class-validator';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { PaginationDto } from '../common/dto/pagination.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
-export class UserService {
+export class UserService implements OnModuleInit {
   private readonly logger = new Logger('UserService');
 
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly configService: ConfigService,
   ) {}
 
+  async onModuleInit() {
+    await this.createDefaultUser();
+  }
+
+  async createDefaultUser() {
+    const userExists = await this.userRepository.findOne({
+      where: {
+        email: this.configService.get('DEFAULT_USER_EMAIL'),
+      },
+    });
+    if (userExists) return;
+
+    const password: string = this.configService.get('DEFAULT_USER_PASS');
+
+    const user: User = this.userRepository.create({
+      name: this.configService.get('DEAFULT_USER_NAME'),
+      lastName: this.configService.get('DEFAULT_USER_LAST_NAME'),
+      email: this.configService.get('DEFAULT_USER_EMAIL'),
+      password: bcrypt.hashSync(password, 10),
+    });
+
+    try {
+      await this.userRepository.save(user);
+      this.logger.log(`Default user created`);
+    } catch (error) {
+      this.handleDBExceptions(error);
+    }
+  }
+
   async findAll(paginationDto: PaginationDto): Promise<User[]> {
-    const { limit = 10, offset = 0 } = paginationDto;
+    let { limit, offset } = paginationDto;
+
+    limit = this.configService.get('LIMIT');
+    offset = this.configService.get('OFFSET');
 
     const users = await this.userRepository
       .createQueryBuilder('user')

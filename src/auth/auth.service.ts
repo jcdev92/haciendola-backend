@@ -65,6 +65,20 @@ export class AuthService {
     return token;
   }
 
+  async checkAuthStatus(jwtToken: { token: string }) {
+    const { token } = jwtToken;
+    try {
+      const { id } = this.jwtService.verify(token);
+      const user = await this.userRepository.findOneBy({ id });
+      return {
+        ...user,
+        token: this.getJwtToken({ id: user.id }),
+      };
+    } catch (error) {
+      throw new BadRequestException('Token expired or not valid');
+    }
+  }
+
   private handleDBErros(error: any): never {
     if (error.code === '23505') {
       throw new BadRequestException(error.detail);
