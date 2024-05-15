@@ -44,7 +44,6 @@ export class Product {
   @Column('bool', {
     name: 'is_active',
     default: true,
-    nullable: false,
   })
   isActive: boolean;
 }

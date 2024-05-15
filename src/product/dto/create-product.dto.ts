@@ -60,7 +60,6 @@ export class CreateProductDto {
   @ApiProperty({ example: '7891153003689', description: 'Product barcode' })
   barcode: string;
 
-  @IsNotEmpty()
   @ApiProperty({ example: true, description: 'Product status' })
   isActive: boolean;
 }
