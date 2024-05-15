@@ -33,9 +33,12 @@
 
   - Desarrollo:
     - En en el archivo ".env.template" se encuentran las respectivas variables de entorno.
-    - recuerda renombrar el ".env.template" por ".env"
-    - recuerda tambien DESCOMENTAR LAS VARIABLES DE ENTORNO
-    - Puedes usar las valores de las variables de entorno que ya estan por defecto, o cambiarlos por los que tu prefieras.
+    - Recuerda renombrar el ".env.template" por ".env".
+    - Recuerda tambien DESCOMENTAR LAS VARIABLES DE ENTORNO.
+    - Puedes usar los valores de las variables de entorno que ya estan por defecto, o cambiarlos por los que tu prefieras.
+    - Al iniciar la api desde un archivo products.xslx se cargan todos los productos indicados por haciendola en las instrucciones del desafio, a la base de datos.
+    - Al iniciar la api se crea por defecto un usuario con el que puedes logearte sin necesidad de crear uno
+    - Las credenciales de dicho usuario se encuentran como variables de entorno en el archivo .env.template, puedes usar los que estan comentados, o usar los que tu prefieres colocando los valores de preferencia en dichas variables de entorno.
 
 
 **REQUISITOS:**
