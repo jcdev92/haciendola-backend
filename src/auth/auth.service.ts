@@ -75,7 +75,7 @@ export class AuthService {
         token: this.getJwtToken({ id: user.id }),
       };
     } catch (error) {
-      throw new BadRequestException('Token expired or not valid');
+      throw new BadRequestException('Session expired, please login again.');
     }
   }
 
