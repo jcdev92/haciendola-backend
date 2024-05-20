@@ -62,7 +62,7 @@ export class UserService implements OnModuleInit {
 
     const users = await this.userRepository
       .createQueryBuilder('user')
-      .where('user.isActive = true')
+      // .where('user.isActive = true')
       .take(limit)
       .skip(offset)
       .getMany();

@@ -82,7 +82,7 @@ export class ProductService implements OnModuleInit {
 
     const products = await this.productRepository
       .createQueryBuilder('product')
-      .where('product.isActive = true')
+      // .where('product.isActive = true')
       .take(limit)
       .skip(offset)
       .getMany();
